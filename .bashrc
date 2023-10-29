@@ -1,10 +1,6 @@
 #!/bin/bash
 iatest=$(expr index "$-" i)
 
-#######################################################
-# SOURCED ALIAS'S AND SCRIPTS BY zachbrowne.me
-#######################################################
-
 # Source global definitions
 if [ -f /etc/bashrc ]; then
 	 . /etc/bashrc
@@ -33,6 +29,33 @@ export HISTCONTROL=erasedups:ignoredups:ignorespace
 
 # Check the window size after each command and, if necessary, update the values of LINES and COLUMNS
 shopt -s checkwinsize
+
+#more sensitive data
+[[ -f ~/.bashrc-private ]] && . ~/.bashrc-private
+
+alias run-all-scripts-here="for script in ./*.sh ; do bash $script ; done"
+
+alias var="cp ~/DATA/arcolinux-nemesis/Personal/settings/variety/variety.conf ~/.config/variety/variety.conf"
+
+alias slu='slurm -i enp0s31f6'
+
+#moving your personal files and folders from /personal to ~
+alias personal1='cp -Rf /personal/1/* ~'
+alias personal2='cp -Rf /personal/2/* ~'
+alias personal3='cp -Rf /personal/3/* ~'
+alias personal4='cp -Rf /personal/4/* ~'
+alias personal5='cp -Rf /personal/5/* ~'
+alias personal6='cp -Rf /personal/6/* ~'
+alias personal7='cp -Rf /personal/7/* ~'
+alias personal8='cp -Rf /personal/8/* ~'
+alias personal9='cp -Rf /personal/9/* ~'
+
+alias xls="exa -a --icons --color=always --group-directories-first"
+alias xll="exa -lag --icons --color=always --group-directories-first --octal-permissions"
+
+alias cpuu="gcc -c -Q -march=native --help=target | grep march | awk '{print $2}' | head -1"
+
+alias ans="cd $HOME/projects/arto/arto && git pull && bash ./0-current*"
 
 # Causes bash to append to history instead of overwriting it so if you start a new terminal, you have old session history
 shopt -s histappend

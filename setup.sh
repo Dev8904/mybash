@@ -1,9 +1,17 @@
-#!/bin/bash
+##################################################################################################################
+#Author  : Jonathan Marshall
+#Github  : https://github.com/Dev8904
+###########################################################################################################################
 
-RC='\e[0m'
-RED='\e[31m'
-YELLOW='\e[33m'
-GREEN='\e[32m'
+#Declaring our installed directory
+installed_dir=$(dirname "$(readlink -f "$(basename "$(pwd)")")")
+
+##################################################################################################################
+CNT="[\e[1;36mNOTE\e[0m]"
+COK="[\e[1;32mOK\e[0m]"
+CER="[\e[1;31mERROR\e[0m]"
+CAC="[\e[1;33mACTION\e[0m]"
+INSTLOG="install.log"
 
 command_exists () {
     command -v $1 >/dev/null 2>&1;
@@ -13,12 +21,12 @@ checkEnv() {
     ## Check for requirements.
     REQUIREMENTS='curl groups sudo'
     if ! command_exists ${REQUIREMENTS}; then
-        echo -e "${RED}To run me, you need: ${REQUIREMENTS}${RC}"
+        echo -e "${CER}To run me, you need: ${REQUIREMENTS}${CNT}"
         exit 1
     fi
 
     ## Check Package Handeler
-    PACKAGEMANAGER='apt yum dnf pacman'
+    PACKAGEMANAGER='apt pacman'
     for pgm in ${PACKAGEMANAGER}; do
         if command_exists ${pgm}; then
             PACKAGER=${pgm}
@@ -27,15 +35,14 @@ checkEnv() {
     done
 
     if [ -z "${PACKAGER}" ]; then
-        echo -e "${RED}Can't find a supported package manager"
+        echo -e "${CER}Can't find a supported package manager"
         exit 1
     fi
 
 
     ## Check if the current directory is writable.
-    GITPATH="$(dirname "$(realpath "$0")")"
-    if [[ ! -w ${GITPATH} ]]; then
-        echo -e "${RED}Can't write to ${GITPATH}${RC}"
+    if [[ ! -w ${INSTALLED_DIR} ]]; then
+        echo -e "${CER}Can't write to ${INSTALLED_DIR}${CNT}"
         exit 1
     fi
 
@@ -50,7 +57,7 @@ checkEnv() {
 
     ## Check if member of the sudo group.
     if ! groups | grep ${SUGROUP} >/dev/null; then
-        echo -e "${RED}You need to be a member of the sudo group to run me!"
+        echo -e "${CER}You need to be a member of the sudo group to run me!"
         exit 1
     fi
     
@@ -58,8 +65,8 @@ checkEnv() {
 
 installDepend() {
     ## Check for dependencies.
-    DEPENDENCIES='autojump bash bash-completion tar neovim bat'
-    echo -e "${YELLOW}Installing dependencies...${RC}"
+    DEPENDENCIES='autojump bash bash-completion tar bat'
+    echo -e "${CAC}Installing dependencies...${CNT}"
     if [[ $PACKAGER == "pacman" ]]; then
         if ! command_exists yay; then
             echo "Installing yay..."
@@ -81,7 +88,7 @@ installStarship(){
     fi
 
     if ! curl -sS https://starship.rs/install.sh|sh;then
-        echo -e "${RED}Something went wrong during starship install!${RC}"
+        echo -e "${CER}Something went wrong during starship install!${CNT}"
         exit 1
     fi
 }
@@ -92,24 +99,24 @@ linkConfig() {
     ## Check if a bashrc file is already there.
     OLD_BASHRC="${USER_HOME}/.bashrc"
     if [[ -e ${OLD_BASHRC} ]]; then
-        echo -e "${YELLOW}Moving old bash config file to ${USER_HOME}/.bashrc.bak${RC}"
+        echo -e "${CAC}Moving old bash config file to ${USER_HOME}/.bashrc.bak${CNT}"
         if ! mv ${OLD_BASHRC} ${USER_HOME}/.bashrc.bak; then
-            echo -e "${RED}Can't move the old bash config file!${RC}"
+            echo -e "${CER}Can't move the old bash config file!${CNT}"
             exit 1
         fi
     fi
 
-    echo -e "${YELLOW}Linking new bash config file...${RC}"
+    echo -e "${CAC}Linking new bash config file...${CNT}"
     ## Make symbolic link.
-    ln -svf ${GITPATH}/.bashrc ${USER_HOME}/.bashrc
-    ln -svf ${GITPATH}/starship.toml ${USER_HOME}/.config/starship.toml
+    ln -svf ${INSTALLED_DIR}/.bashrc ${USER_HOME}/.bashrc
+    ln -svf ${INSTALLED_DIR}/starship.toml ${USER_HOME}/.config/starship.toml
 }
 
 checkEnv
 installDepend
 installStarship
 if linkConfig; then
-    echo -e "${GREEN}Done!\nrestart your shell to see the changes.${RC}"
+    echo -e "${COK}Done!\nrestart your shell to see the changes.${CNT}"
 else
-    echo -e "${RED}Something went wrong!${RC}"
+    echo -e "${CER}Something went wrong!${CNT}"
 fi
