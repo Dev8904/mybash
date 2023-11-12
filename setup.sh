@@ -65,7 +65,7 @@ checkEnv() {
 
 installDepend() {
     ## Check for dependencies.
-    DEPENDENCIES='autojump bash bash-completion tar bat'
+    DEPENDENCIES='autojump bash bash-completion tar bat zoxide'
     echo -e "${CAC}Installing dependencies...${CNT}"
     if [[ $PACKAGER == "pacman" ]]; then
         if ! command_exists yay; then
