@@ -41,8 +41,8 @@ checkEnv() {
 
 
     ## Check if the current directory is writable.
-    if [[ ! -w ${INSTALLED_DIR} ]]; then
-        echo -e "${CER}Can't write to ${INSTALLED_DIR}${CNT}"
+    if [[ ! -w ${installed_dir} ]]; then
+        echo -e "${CER}Can't write to ${installed_dir}${CNT}"
         exit 1
     fi
 
@@ -108,8 +108,8 @@ linkConfig() {
 
     echo -e "${CAC}Linking new bash config file...${CNT}"
     ## Make symbolic link.
-    ln -svf ${INSTALLED_DIR}/.bashrc ${USER_HOME}/.bashrc
-    ln -svf ${INSTALLED_DIR}/starship.toml ${USER_HOME}/.config/starship.toml
+    ln -svf ${installed_dir}/.bashrc ${USER_HOME}/.bashrc
+    ln -svf ${installed_dir}/starship.toml ${USER_HOME}/.config/starship.toml
 }
 
 checkEnv
